@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrant Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="sticky-header">
+        <h1>Vibrant Blog</h1>
+        <div class="header-links">
+            <a href="#" onclick="showTab('blog')" aria-label="Home">Home</a>
+            <span id="user-status">Guest | <a href="#" onclick="toggleAuth()">Login</a></span>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Explore</h2>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search posts..." aria-label="Search posts">
+            </div>
+            <ul>
+                <li><a href="#" onclick="showTab('blog')" aria-label="Home">Home</a></li>
+                <li><a href="#" onclick="showTab('categories')" aria-label="Categories">Categories</a></li>
+                <li><a href="#" onclick="showTab('info')" aria-label="Info">Info</a></li>
+                <li><a href="#" onclick="showTab('contact')" aria-label="Contact">Contact</a></li>
+                <li><a href="#" onclick="showTab('profile')" aria-label="Profile">Profile</a></li>
+            </ul>
+            <div class="newsletter">
+                <h3>Subscribe</h3>
+                <form onsubmit="subscribeNewsletter(event)">
+                    <input type="email" id="newsletter-email" placeholder="Your Email" aria-label="Newsletter email">
+                    <button type="submit">Subscribe</button>
+                </form>
+                <div id="newsletter-response"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+        </div>
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab-button active" onclick="showTab('blog')" aria-label="Blog tab">Blog</button>
+                <button class="tab-button" onclick="showTab('categories')" aria-label="Categories tab">Categories</button>
+                <button class="tab-button" onclick="showTab('info')" aria-label="Info tab">Info</button>
+                <button class="tab-button" onclick="showTab('contact')" aria-label="Contact tab">Contact</button>
+                <button class="tab-button" onclick="showTab('profile')" aria-label="Profile tab">Profile</button>
+            </div>
+            <div class="loading" id="loading">Loading...</div>
+            <div class="error-boundary" id="error-boundary" style="display: none;">
+                <p>Oops! Something went wrong. Please try refreshing the page.</p>
+            </div>
+            <div class="blog-section active">
+                <div class="filter-bar">
+                    <label for="category-filter">Category: </label>
+                    <select id="category-filter" onchange="filterPosts()">
+                        <option value="all">All</option>
+                        <option value="Science">Science</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                        <option value="Food">Food</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Travel">Travel Çocuklar</option>
+                    </select>
+                    <label for="sort-filter">Sort: </label>
+                    <select id="sort-filter" onchange="filterPosts()">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="likes-desc">Most Liked</option>
+                    </select>
+                </div>
+                <div class="articles" id="articles">
+                    <div class="article" data-id="1" data-category="Science" data-tags="astronomy,space" data-date="2025-05-10">
+                        <h2>Exploring the Cosmos</h2>
+                        <p class="meta">Posted on May 10, 2025 | Science | ~5 min read</p>
+                        <p>The universe is a vast expanse filled with wonders. From galaxies to nebulae, the cosmos invites exploration. Gravitational waves have opened new windows into black holes.</p>
+                        <p>Join us as we delve into astronomical breakthroughs and humanity's place among the stars.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('astronomy')">astronomy</span>
+                            <span class="tag" onclick="filterByTag('space')">space</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(1)" aria-label="Like post">❤️ <span id="likes-1">0</span></button>
+                            <button onclick="copyPostLink(1)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Exploring the Cosmos', '1', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Exploring the Cosmos', '1', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Exploring the Cosmos', '1', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(1, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-1"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-1"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="2" data-category="Lifestyle" data-tags="minimalism,wellness" data-date="2025-05-08">
+                        <h2>The Art of Minimalism</h2>
+                        <p class="meta">Posted on May 8, 2025 | Lifestyle | ~4 min read</p>
+                        <p>Minimalism embraces simplicity and intentionality, bringing clarity to busy lives.</p>
+                        <p>Explore tips for adopting a minimalist mindset, from wardrobe to digital life.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('minimalism')">minimalism</span>
+                            <span class="tag" onclick="filterByTag('wellness')">wellness</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(2)" aria-label="Like post">❤️ <span id="likes-2">0</span></button>
+                            <button onclick="copyPostLink(2)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('The Art of Minimalism', '2', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('The Art of Minimalism', '2', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('The Art of Minimalism', '2', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(2, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-2"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-2"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="3" data-category="Food" data-tags="cuisine,recipes" data-date="2025-05-05">
+                        <h2>Flavors of the World</h2>
+                        <p class="meta">Posted on May 5, 2025 | Food | ~6 min read</p>
+                        <p>Food connects cultures, from Thai curries to French pastries.</p>
+                        <p>Join a culinary journey with recipes and dish histories.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('cuisine')">cuisine</span>
+                            <span class="tag" onclick="filterByTag('recipes')">recipes</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(3)" aria-label="Like post">❤️ <span id="likes-3">0</span></button>
+                            <button onclick="copyPostLink(3)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Flavors of the World', '3', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Flavors of the World', '3', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Flavors of the World', '3', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(3, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-3"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-3"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="4" data-category="Technology" data-tags="ai,innovation" data-date="2025-05-02">
+                        <h2>The Future of Technology</h2>
+                        <p class="meta">Posted on May 2, 2025 | Technology | ~5 min read</p>
+                        <p>From AI to quantum computing, tech is reshaping our world.</p>
+                        <p>Dive into trends, ethics, and tech's potential.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('ai')">ai</span>
+                            <span class="tag" onclick="filterByTag('innovation')">innovation</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(4)" aria-label="Like post">❤️ <span id="likes-4">0</span></button>
+                            <button onclick="copyPostLink(4)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('The Future of Technology', '4', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('The Future of Technology', '4', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('The Future of Technology', '4', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(4, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-4"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-4"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="5" data-category="Travel" data-tags="adventure,destinations" data-date="2025-04-28">
+                        <h2>Wanderlust Wonders</h2>
+                        <p class="meta">Posted on April 28, 2025 | Travel | ~4 min read</p>
+                        <p>Travel opens hearts, from rainforests to ancient cities.</p>
+                        <p>Explore 2025 destinations and sustainable travel tips.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('adventure')">adventure</span>
+                            <span class="tag" onclick="filterByTag('destinations')">destinations</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(5)" aria-label="Like post">❤️ <span id="likes-5">0</span></button>
+                            <button onclick="copyPostLink(5)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Wanderlust Wonders', '5', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Wanderlust Wonders', '5', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Wanderlust Wonders', '5', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(5, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-5"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-5"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="6" data-category="Science" data-tags="quantum,physics" data-date="2025-04-25">
+                        <h2>Quantum Leap Forward</h2>
+                        <p class="meta">Posted on April 25, 2025 | Science | ~5 min read</p>
+                        <p>Quantum physics unlocks possibilities in computing and cryptography.</p>
+                        <p>Learn how quantum tech will revolutionize our world.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('quantum')">quantum</span>
+                            <span class="tag" onclick="filterByTag('physics')">physics</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(6)" aria-label="Like post">❤️ <span id="likes-6">0</span></button>
+                            <button onclick="copyPostLink(6)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Quantum Leap Forward', '6', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Quantum Leap Forward', '6', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Quantum Leap Forward', '6', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(6, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-6"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-6"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="7" data-category="Lifestyle" data-tags="mindfulness,wellness" data-date="2025-04-20">
+                        <h2>Mindful Living</h2>
+                        <p class="meta">Posted on April 20, 2025 | Lifestyle | ~3 min read</p>
+                        <p>Mindfulness fosters peace through meditation and presence.</p>
+                        <p>Discover mindfulness exercises for daily life.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('mindfulness')">mindfulness</span>
+                            <span class="tag" onclick="filterByTag('wellness')">wellness</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(7)" aria-label="Like post">❤️ <span id="likes-7">0</span></button>
+                            <button onclick="copyPostLink(7)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Mindful Living', '7', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Mindful Living', '7', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Mindful Living', '7', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(7, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-7"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-7"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="8" data-category="Food" data-tags="vegan,recipes" data-date="2025-04-15">
+                        <h2>Plant-Based Delights</h2>
+                        <p class="meta">Posted on April 15, 2025 | Food | ~4 min read</p>
+                        <p>Plant-based diets are delicious and sustainable.</p>
+                        <p>Try vegan recipes and learn plant-based benefits.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('vegan')">vegan</span>
+                            <span class="tag" onclick="filterByTag('recipes')">recipes</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(8)" aria-label="Like post">❤️ <span id="likes-8">0</span></button>
+                            <button onclick="copyPostLink(8)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Plant-Based Delights', '8', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Plant-Based Delights', '8', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Plant-Based Delights', '8', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(8, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-8"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-8"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="9" data-category="Technology" data-tags="ai,ethics" data-date="2025-04-10">
+                        <h2>Ethics of AI</h2>
+                        <p class="meta">Posted on April 10, 2025 | Technology | ~5 min read</p>
+                        <p>AI transforms industries but raises privacy and bias concerns.</p>
+                        <p>Explore challenges of ethical AI systems.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('ai')">ai</span>
+                            <span class="tag" onclick="filterByTag('ethics')">ethics</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(9)" aria-label="Like post">❤️ <span id="likes-9">0</span></button>
+                            <button onclick="copyPostLink(9)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Ethics of AI', '9', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Ethics of AI', '9', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Ethics of AI', '9', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(9, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-9"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-9"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="10" data-category="Travel" data-tags="europe,destinations" data-date="2025-04-05">
+                        <h2>Hidden Gems of Europe</h2>
+                        <p class="meta">Posted on April 5, 2025 | Travel | ~4 min read</p>
+                        <p>Europe offers charming, lesser-known destinations.</p>
+                        <p>Discover quaint villages and stunning landscapes.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('europe')">europe</span>
+                            <span class="tag" onclick="filterByTag('destinations')">destinations</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(10)" aria-label="Like post">❤️ <span id="likes-10">0</span></button>
+                            <button onclick="copyPostLink(10)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Hidden Gems of Europe', '10', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Hidden Gems of Europe', '10', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Hidden Gems of Europe', '10', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(10, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-10"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-10"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="11" data-category="Science" data-tags="environment,climate" data-date="2025-04-01">
+                        <h2>Climate Change Solutions</h2>
+                        <p class="meta">Posted on April 1, 2025 | Science | ~6 min read</p>
+                        <p>Innovative solutions are key to combating climate change.</p>
+                        <p>Explore renewable energy and conservation strategies.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('environment')">environment</span>
+                            <span class="tag" onclick="filterByTag('climate')">climate</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(11)" aria-label="Like post">❤️ <span id="likes-11">0</span></button>
+                            <button onclick="copyPostLink(11)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Climate Change Solutions', '11', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="share",
+                            <a href="#" onclick="sharePost('Climate Change Solutions', '11', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Climate Change Solutions', '11', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(11, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-11"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-11"></ul>
+                        </div>
+                    </div>
+                    <div class="article" data-id="12" data-category="Lifestyle" data-tags="fitness,wellness" data-date="2025-03-28">
+                        <h2>Fitness for Life</h2>
+                        <p class="meta">Posted on March 28, 2025 | Lifestyle | ~4 min read</p>
+                        <p>Fitness is about building a sustainable, healthy lifestyle.</p>
+                        <p>Get workout plans and nutrition tips for all levels.</p>
+                        <div class="tags">
+                            <span class="tag" onclick="filterByTag('fitness')">fitness</span>
+                            <span class="tag" onclick="filterByTag('wellness')">wellness</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="like-btn" onclick="toggleLike(12)" aria-label="Like post">❤️ <span id="likes-12">0</span></button>
+                            <button onclick="copyPostLink(12)" aria-label="Copy post link">🔗 Copy Link</button>
+                        </div>
+                        <div class="social-share">
+                            <a href="#" onclick="sharePost('Fitness for Life', '12', 'Twitter')" class="share-btn twitter">Twitter</a>
+                            <a href="#" onclick="sharePost('Fitness for Life', '12', 'Facebook')" class="share-btn facebook">Facebook</a>
+                            <a href="#" onclick="sharePost('Fitness for Life', '12', 'LinkedIn')" class="share-btn linkedin">LinkedIn</a>
+                        </div>
+                        <div class="comment-form">
+                            <h3>Leave a Comment</h3>
+                            <input type="text" class="comment-author" placeholder="Your Name" aria-label="Comment author">
+                            <textarea class="comment-content" placeholder="Your Comment" rows="4" aria-label="Comment content"></textarea>
+                            <button onclick="addComment(12, null)">Submit</button>
+                        </div>
+                        <div class="comments" id="comments-12"></div>
+                        <div class="related-posts">
+                            <h3>Related Posts</h3>
+                            <ul id="related-12"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <button onclick="prevPage()" aria-label="Previous page">Previous</button>
+                    <span id="page-info">Page 1</span>
+                    <button onclick="nextPage()" aria-label="Next page">Next</button>
+                </div>
+            </div>
+            <div class="categories-section">
+                <h2>Categories</h2>
+                <ul class="category-list">
+                    <li><a href="#" onclick="filterByCategory('Science')" aria-label="Science category">Science</a> (3 posts)</li>
+                    <li><a href="#" onclick="filterByCategory('Lifestyle')" aria-label="Lifestyle category">Lifestyle</a> (3 posts)</li>
+                    <li><a href="#" onclick="filterByCategory('Food')" aria-label="Food category">Food</a> (2 posts)</li>
+                    <li><a href="#" onclick="filterByCategory('Technology')" aria-label="Technology category">Technology</a> (2 posts)</li>
+                    <li><a href="#" onclick="filterByCategory('Travel')" aria-label="Travel category">Travel</a> (2 posts)</li>
+                    <li><a href="#" onclick="filterByCategory('all')" aria-label="All categories">All</a> (12 posts)</li>
+                </ul>
+            </div>
+            <div class="info-section">
+                <h2>About Vibrant Blog</h2>
+                <p>Welcome to Vibrant Blog, where ideas thrive! We share stories on science, lifestyle, food, tech, and travel.</p>
+                <p>Our feature-rich platform includes search, filtering, likes, comments, dark mode, and more, built with HTML, CSS, and JavaScript.</p>
+                <h3>Our Team</h3>
+                <p>A passionate team of writers and designers delivering fresh content weekly.</p>
+                <h3>Why Vibrant?</h3>
+                <p>We celebrate bold ideas and diverse perspectives with a colorful, engaging design.</p>
+                <h3>Join Us</h3>
+                <p>Explore, comment, and suggest topics via our contact page!</p>
+            </div>
+            <div class="contact-section">
+                <h2>Contact Us</h2>
+                <form class="contact-form" onsubmit="submitContact(event)">
+                    <input type="text" id="contact-name" placeholder="Your Name" required aria-label="Your name">
+                    <input type="email" id="contact-email" placeholder="Your Email" required aria-label="Your email">
+                    <textarea id="contact-message" placeholder="Your Message" rows="5" required aria-label="Your message"></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+                <div id="contact-response"></div>
+            </div>
+            <div class="profile-section">
+                <h2>User Profile</h2>
+                <div id="profile-content">
+                    <p>Please log in to view your profile.</p>
+                    <form id="login-form" onsubmit="loginUser(event)">
+                        <input type="text" id="username" placeholder="Username" required aria-label="Username">
+                        <input type="password" id="password" placeholder="Password" required aria-label="Password">
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="back-to-top" onclick="scrollToTop()" aria-label="Back to top">↑ Top</button>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
